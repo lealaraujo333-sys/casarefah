@@ -33,8 +33,8 @@ const TestimonialsSection = () => {
 
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <Reveal>
-                    <div className="flex flex-col items-center justify-center text-center mb-16">
-                        <span className="text-primary text-sm font-medium tracking-widest uppercase mb-4">
+                    <div className="w-full text-center mb-16">
+                        <span className="block text-primary text-sm font-medium tracking-widest uppercase mb-4">
                             Depoimentos
                         </span>
                         <h2 className="font-serif text-4xl md:text-5xl text-foreground">
