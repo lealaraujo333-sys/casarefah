@@ -19,9 +19,12 @@ const NavigationRefined = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    const textColor = isScrolled ? "text-white" : "text-foreground";
+    const hoverColor = "hover:text-primary";
+
     return (
         <nav
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-white/80 backdrop-blur-md border-b border-black/5 py-4" : "bg-transparent py-6"
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-stone-900/95 backdrop-blur-md border-b border-white/10 py-4" : "bg-transparent py-6"
                 }`}
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
@@ -30,7 +33,7 @@ const NavigationRefined = () => {
                     <Sheet>
                         <SheetTrigger asChild>
                             <Button variant="ghost" size="icon" className="md:hidden">
-                                <Menu className="h-6 w-6 text-foreground" />
+                                <Menu className={`h-6 w-6 ${textColor}`} />
                             </Button>
                         </SheetTrigger>
                         {/* @ts-ignore */}
@@ -59,16 +62,16 @@ const NavigationRefined = () => {
                     </Sheet>
 
                     <div className="hidden md:flex items-center gap-6">
-                        <Link to="/categoria/velas" className="text-sm font-medium tracking-wide hover:text-primary transition-colors">
+                        <Link to="/categoria/velas" className={`text-sm font-medium tracking-wide ${textColor} ${hoverColor} transition-colors`}>
                             VELAS
                         </Link>
-                        <Link to="/categoria/difusores" className="text-sm font-medium tracking-wide hover:text-primary transition-colors">
+                        <Link to="/categoria/difusores" className={`text-sm font-medium tracking-wide ${textColor} ${hoverColor} transition-colors`}>
                             DIFUSORES
                         </Link>
-                        <Link to="/categoria/kits" className="text-sm font-medium tracking-wide hover:text-primary transition-colors">
+                        <Link to="/categoria/kits" className={`text-sm font-medium tracking-wide ${textColor} ${hoverColor} transition-colors`}>
                             KITS
                         </Link>
-                        <Link to="/categoria/decor" className="text-sm font-medium tracking-wide hover:text-primary transition-colors">
+                        <Link to="/categoria/decor" className={`text-sm font-medium tracking-wide ${textColor} ${hoverColor} transition-colors`}>
                             DECOR
                         </Link>
                     </div>
@@ -76,7 +79,7 @@ const NavigationRefined = () => {
 
                 {/* Center: Logo */}
                 <Link to="/" className="absolute left-1/2 -translate-x-1/2">
-                    <h1 className="font-serif text-3xl font-medium tracking-tight text-foreground">
+                    <h1 className={`font-serif text-3xl font-medium tracking-tight ${textColor} transition-colors`}>
                         CASA REFAH
                     </h1>
                 </Link>
@@ -84,7 +87,7 @@ const NavigationRefined = () => {
                 {/* Right: Cart & Account */}
                 <div className="flex items-center gap-4">
                     <Button variant="ghost" size="icon" className="hidden md:flex">
-                        <Search className="h-5 w-5 text-foreground" />
+                        <Search className={`h-5 w-5 ${textColor}`} />
                     </Button>
                     <Button
                         variant="ghost"
@@ -92,7 +95,7 @@ const NavigationRefined = () => {
                         className="relative"
                         onClick={() => setIsCartOpen(true)}
                     >
-                        <ShoppingBag className="h-5 w-5 text-foreground" />
+                        <ShoppingBag className={`h-5 w-5 ${textColor}`} />
                         {cartCount > 0 && (
                             <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] font-medium text-white flex items-center justify-center">
                                 {cartCount}
@@ -106,3 +109,4 @@ const NavigationRefined = () => {
 };
 
 export default NavigationRefined;
+

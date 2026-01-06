@@ -130,6 +130,9 @@ const Product = () => {
                 <p className="text-sm text-stone-500">
                   Em até 3x de R$ {(product.price / 3).toFixed(2).replace('.', ',')} sem juros
                 </p>
+                <p className="text-xs text-stone-400 mt-1">
+                  *O valor final pode variar de acordo com o frete
+                </p>
               </div>
             </Reveal>
 
