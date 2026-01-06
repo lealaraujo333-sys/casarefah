@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,11 +9,21 @@ import { Switch } from "@/components/ui/switch";
 import { Product } from "@/types/product";
 import { useProducts } from "@/contexts/ProductContext";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { Upload, Image as ImageIcon, Check, Loader2 } from "lucide-react";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 interface ProductFormDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    product?: Product | null; // null = new product
+    product?: Product | null;
+}
+
+interface ProductImage {
+    name: string;
+    path: string;
+    url: string;
 }
 
 const categories = [
@@ -27,6 +37,8 @@ const categories = [
 const ProductFormDialog = ({ open, onOpenChange, product }: ProductFormDialogProps) => {
     const { addProduct, updateProduct } = useProducts();
     const { toast } = useToast();
+    const { getToken } = useAuth();
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const isEditing = !!product;
 
     const [formData, setFormData] = useState({
@@ -43,6 +55,64 @@ const ProductFormDialog = ({ open, onOpenChange, product }: ProductFormDialogPro
         details: "",
         care: "",
     });
+
+    const [availableImages, setAvailableImages] = useState<ProductImage[]>([]);
+    const [loadingImages, setLoadingImages] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [showImageSelector, setShowImageSelector] = useState(false);
+
+    // Fetch available images
+    const fetchImages = async () => {
+        setLoadingImages(true);
+        try {
+            const token = getToken();
+            const res = await fetch(`${API_URL}/images`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const images = await res.json();
+                setAvailableImages(images);
+            }
+        } catch (e) {
+            console.error("Error fetching images:", e);
+        } finally {
+            setLoadingImages(false);
+        }
+    };
+
+    // Handle image upload
+    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploading(true);
+        try {
+            const token = getToken();
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const res = await fetch(`${API_URL}/images/upload`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+                body: formData
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                setFormData(prev => ({ ...prev, image: data.path }));
+                toast({ title: "Upload concluído!", description: "Imagem carregada com sucesso." });
+                fetchImages(); // Refresh list
+            } else {
+                const error = await res.json();
+                toast({ title: "Erro no upload", description: error.error, variant: "destructive" });
+            }
+        } catch (e) {
+            toast({ title: "Erro", description: "Falha ao fazer upload", variant: "destructive" });
+        } finally {
+            setUploading(false);
+            if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+    };
 
     // Load product data when editing
     useEffect(() => {
@@ -62,7 +132,6 @@ const ProductFormDialog = ({ open, onOpenChange, product }: ProductFormDialogPro
                 care: product.care || "",
             });
         } else {
-            // Reset form for new product
             setFormData({
                 name: "",
                 slug: "",
@@ -79,6 +148,13 @@ const ProductFormDialog = ({ open, onOpenChange, product }: ProductFormDialogPro
             });
         }
     }, [product, open]);
+
+    // Fetch images when dialog opens
+    useEffect(() => {
+        if (open) {
+            fetchImages();
+        }
+    }, [open]);
 
     // Auto-generate slug from name
     const generateSlug = (name: string) => {
@@ -101,6 +177,16 @@ const ProductFormDialog = ({ open, onOpenChange, product }: ProductFormDialogPro
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Validate image path starts with /products/ for security
+        if (formData.image && !formData.image.startsWith("/products/")) {
+            toast({
+                title: "URL inválida",
+                description: "A imagem deve estar na pasta /products/",
+                variant: "destructive"
+            });
+            return;
+        }
 
         const productData: Product = {
             id: product?.id || `${Date.now()}`,
@@ -226,20 +312,108 @@ const ProductFormDialog = ({ open, onOpenChange, product }: ProductFormDialogPro
                         />
                     </div>
 
-                    {/* Image */}
-                    <div className="space-y-2">
-                        <Label htmlFor="image">URL da Imagem *</Label>
-                        <Input
-                            id="image"
-                            value={formData.image}
-                            onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
-                            placeholder="/products/nome-do-produto.png"
-                        />
+                    {/* Image Section - Enhanced */}
+                    <div className="space-y-3">
+                        <Label>Imagem do Produto *</Label>
+
+                        {/* Current Image Preview */}
                         {formData.image && (
-                            <div className="mt-2 w-20 h-20 rounded-lg bg-stone-100 overflow-hidden">
-                                <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+                            <div className="flex items-center gap-4 p-3 bg-stone-50 rounded-lg">
+                                <img
+                                    src={formData.image}
+                                    alt="Preview"
+                                    className="w-16 h-16 rounded-lg object-cover border"
+                                />
+                                <div className="flex-1">
+                                    <p className="text-sm font-medium">{formData.image.split("/").pop()}</p>
+                                    <p className="text-xs text-muted-foreground">{formData.image}</p>
+                                </div>
                             </div>
                         )}
+
+                        {/* Upload and Select Buttons */}
+                        <div className="flex gap-2">
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleUpload}
+                                accept="image/png,image/jpeg,image/webp,image/gif"
+                                className="hidden"
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={uploading}
+                                className="flex-1"
+                            >
+                                {uploading ? (
+                                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Enviando...</>
+                                ) : (
+                                    <><Upload className="mr-2 h-4 w-4" /> Fazer Upload</>
+                                )}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setShowImageSelector(!showImageSelector)}
+                                className="flex-1"
+                            >
+                                <ImageIcon className="mr-2 h-4 w-4" />
+                                {showImageSelector ? "Ocultar Galeria" : "Escolher Existente"}
+                            </Button>
+                        </div>
+
+                        {/* Image Selector Grid */}
+                        {showImageSelector && (
+                            <div className="border rounded-lg p-3 max-h-48 overflow-y-auto">
+                                {loadingImages ? (
+                                    <div className="flex items-center justify-center py-4">
+                                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                                    </div>
+                                ) : availableImages.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground text-center py-4">
+                                        Nenhuma imagem encontrada. Faça upload primeiro.
+                                    </p>
+                                ) : (
+                                    <div className="grid grid-cols-6 gap-2">
+                                        {availableImages.map((img) => (
+                                            <button
+                                                type="button"
+                                                key={img.path}
+                                                onClick={() => {
+                                                    setFormData(prev => ({ ...prev, image: img.path }));
+                                                    setShowImageSelector(false);
+                                                }}
+                                                className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all hover:border-primary ${formData.image === img.path ? "border-primary ring-2 ring-primary/20" : "border-transparent"
+                                                    }`}
+                                            >
+                                                <img
+                                                    src={img.path}
+                                                    alt={img.name}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                {formData.image === img.path && (
+                                                    <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                                                        <Check className="h-5 w-5 text-primary" />
+                                                    </div>
+                                                )}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Manual URL Input */}
+                        <div className="flex gap-2">
+                            <Input
+                                value={formData.image}
+                                onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
+                                placeholder="/products/nome-do-produto.png"
+                                className="flex-1"
+                            />
+                        </div>
                     </div>
 
                     {/* Additional Details */}

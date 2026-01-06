@@ -7,6 +7,7 @@ import { productsRoute } from "./routes/products";
 import { adminRoute } from "./routes/admin";
 import { kitsRoute } from "./routes/kits";
 import { settingsRoute } from "./routes/settings";
+import { imagesRoute } from "./routes/images";
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 
@@ -14,7 +15,18 @@ const app = new Hono();
 
 // Global Middleware
 app.use("*", logger());
-app.use("*", cors()); // Open CORS for dev, restrict in prod
+
+// CORS - Restrict in production, allow all in dev
+const allowedOrigins = process.env.NODE_ENV === "production"
+    ? ["https://casarefah.vercel.app", "https://www.casarefah.com.br", "https://casarefah.com.br"]
+    : ["*"];
+
+app.use("*", cors({
+    origin: allowedOrigins,
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+}));
 
 // Health Check endpoint (for Render and keep-alive)
 app.get("/health", (c) => c.json({ status: "ok", timestamp: new Date().toISOString() }));
@@ -25,6 +37,7 @@ app.route("/products", productsRoute);
 app.route("/admin", adminRoute);
 app.route("/kits", kitsRoute);
 app.route("/settings", settingsRoute);
+app.route("/images", imagesRoute);
 
 // Serve static files from public directory
 app.use("/assets/*", serveStatic({ root: "./public" }));

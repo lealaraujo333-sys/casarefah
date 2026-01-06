@@ -56,9 +56,9 @@ productsRoute.post("/", authMiddleware, zValidator("json", productSchema), async
 });
 
 // PUT /products/:id (Protected - requires auth)
-productsRoute.put("/:id", authMiddleware, async (c) => {
+productsRoute.put("/:id", authMiddleware, zValidator("json", productSchema.partial()), async (c) => {
     const id = c.req.param("id");
-    const data = await c.req.json();
+    const data = c.req.valid("json");
     try {
         const product = await prisma.product.update({
             where: { id },
