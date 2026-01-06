@@ -31,7 +31,19 @@ app.use("*", cors({
 // Health Check endpoint (for Render and keep-alive)
 app.get("/health", (c) => c.json({ status: "ok", timestamp: new Date().toISOString() }));
 
-// API Routes (must come before static files)
+// Serve static product images BEFORE API routes
+// This must come first so /products/*.jpg|png|etc are served as files, not routed to API
+app.use("/products/*", async (c, next) => {
+    const path = c.req.path;
+    // Only serve as static if it's an image file
+    if (/\.(png|jpg|jpeg|webp|gif|ico|svg)$/i.test(path)) {
+        const staticMiddleware = serveStatic({ root: "./public" });
+        return staticMiddleware(c, next);
+    }
+    return next();
+});
+
+// API Routes
 app.get("/api", (c) => c.json({ message: "Casa Refah API is running 🚀", status: "online" }));
 app.route("/products", productsRoute);
 app.route("/admin", adminRoute);
@@ -39,9 +51,8 @@ app.route("/kits", kitsRoute);
 app.route("/settings", settingsRoute);
 app.route("/images", imagesRoute);
 
-// Serve static files from public directory
+// Serve other static files
 app.use("/assets/*", serveStatic({ root: "./public" }));
-app.use("/products/*", serveStatic({ root: "./public" })); // Product images
 app.use("/favicon.ico", serveStatic({ root: "./public" }));
 
 // SPA Fallback - Serve index.html for all non-API routes
