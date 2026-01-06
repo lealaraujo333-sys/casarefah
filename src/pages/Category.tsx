@@ -1,16 +1,16 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { getProductsByCategory } from "@/data/products";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { useProducts } from "@/contexts/ProductContext";
+import NavigationRefined from "@/components/NavigationRefined";
+import FooterRefined from "@/components/FooterRefined";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
 const categoryInfo: Record<string, { title: string; description: string }> = {
+  // ... (keep logic same, just change imports)
   essenza: {
-    title: "Nossos Produtos",
-    description:
-      "Velas aromáticas artesanais e difusores que transformam seu ambiente com fragrâncias delicadas",
+    title: "Coleção Essenza",
+    description: "Nossa linha assinatura de velas e aromas que definem a identidade da Casa Refah",
   },
   decor: {
     title: "Home & Decor",
@@ -22,32 +22,49 @@ const categoryInfo: Record<string, { title: string; description: string }> = {
     description:
       "Cristais, budas e itens espirituais para cultivar paz interior e harmonia",
   },
+  velas: {
+    title: "Velas Aromáticas",
+    description: "Ilumine e perfume seu ambiente com nossas velas artesanais de cera vegetal",
+  },
+  difusores: {
+    title: "Difusores de Ambiente",
+    description: "Fragrâncias contínuas e sofisticadas para manter sua casa sempre acolhedora",
+  },
+  "home-spray": {
+    title: "Home Sprays",
+    description: "Frescor imediato e aromas marcantes com apenas algumas borrifadas",
+  },
+  kits: {
+    title: "Kits Presente",
+    description: "Conjuntos especiais que combinam velas, difusores e peças decorativas para presentear com elegância",
+  },
 };
 
 const Category = () => {
   const { category } = useParams();
   const navigate = useNavigate();
+  const { getProductsByCategory } = useProducts();
   const products = getProductsByCategory(category || "");
   const info = categoryInfo[category || ""];
 
   if (!info) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <NavigationRefined />
         <div className="container mx-auto px-4 py-24 text-center">
           <h1 className="text-2xl font-cormorant mb-4">
             Categoria não encontrada
           </h1>
           <Button onClick={() => navigate("/")}>Voltar à Página Inicial</Button>
         </div>
-        <Footer />
+        <FooterRefined />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <NavigationRefined />
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <Button variant="ghost" onClick={() => navigate("/")} className="mb-8">
@@ -79,7 +96,7 @@ const Category = () => {
         )}
       </main>
 
-      <Footer />
+      <FooterRefined />
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import ProductCard from "@/components/ProductCard";
-import { getFeaturedProducts } from "@/data/products";
+import { useProducts } from "@/contexts/ProductContext";
 import { useNavigate } from "react-router-dom";
 
 const FeaturedProducts = () => {
-  const products = getFeaturedProducts();
+  const { products } = useProducts();
+  const featuredProducts = products.filter(p => p.featured);
   const navigate = useNavigate();
 
   return (
@@ -20,13 +21,13 @@ const FeaturedProducts = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {products.map((product, index) => (
+          {featuredProducts.map((product, index) => (
             <ProductCard key={product.id} product={product} index={index} />
           ))}
         </div>
 
         <div className="text-center mt-12">
-          <Button 
+          <Button
             size="lg"
             variant="outline"
             className="border-primary/30 hover:border-primary hover:bg-primary/5"

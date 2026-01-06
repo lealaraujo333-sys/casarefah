@@ -2,102 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    /* CASA REFAH Design System - Serene & Artisanal */
+    /* CASA REFAH "Ethereal Modern" Design System */
     
-    /* Neutral Base - Warm creams and soft greys */
-    --background: 30 20% 98%;
-    --foreground: 30 8% 25%;
+    /* Base - Paper & Limestone */
+    --background: 30 5% 99%; /* Paper White */
+    --foreground: 30 5% 10%; /* Charcoal */
 
-    /* Card surfaces - Subtle warmth */
-    --card: 30 25% 96%;
-    --card-foreground: 30 8% 25%;
+    /* Cards - Subtle Warmth */
+    --card: 38 10% 95%; /* Limestone */
+    --card-foreground: 30 5% 10%;
 
-    /* Popover elements */
-    --popover: 30 25% 97%;
-    --popover-foreground: 30 8% 25%;
+    /* Popovers */
+    --popover: 30 5% 99%;
+    --popover-foreground: 30 5% 10%;
 
-    /* Primary - Cement grey with warmth */
-    --primary: 30 6% 45%;
-    --primary-foreground: 30 20% 98%;
+    /* Primary - Clay */
+    --primary: 32 18% 48%; /* Earthy Clay */
+    --primary-foreground: 30 5% 99%;
 
-    /* Secondary - Lighter cement tone */
-    --secondary: 30 15% 90%;
-    --secondary-foreground: 30 8% 30%;
+    /* Secondary - Dried Sage */
+    --secondary: 100 8% 61%; /* Dried Sage */
+    --secondary-foreground: 30 5% 10%;
 
-    /* Muted - Soft background tones */
-    --muted: 30 18% 92%;
-    --muted-foreground: 30 6% 50%;
+    /* Accent - Burnished Gold */
+    --accent: 35 45% 62%;
+    --accent-foreground: 30 5% 10%;
 
-    /* Accent - Pale rose pink */
-    --accent: 345 40% 88%;
-    --accent-foreground: 345 20% 35%;
+    /* Muted */
+    --muted: 30 5% 96%;
+    --muted-foreground: 30 5% 45%;
 
-    /* Sage green accent */
-    --sage: 140 20% 75%;
-    --sage-foreground: 140 25% 30%;
+    /* Borders - Subtle */
+    --border: 30 5% 90%;
+    --input: 30 5% 90%;
+    --ring: 32 18% 48%;
 
-    /* Destructive - Muted terracotta */
-    --destructive: 10 50% 55%;
-    --destructive-foreground: 30 20% 98%;
-
-    /* Borders - Very subtle */
-    --border: 30 15% 88%;
-    --input: 30 15% 88%;
-    --ring: 30 6% 45%;
-
+    /* Radius - Sculpted */
     --radius: 0.75rem;
 
-    /* Gradients for serene atmosphere */
-    --gradient-hero: linear-gradient(135deg, hsl(30 25% 97%) 0%, hsl(30 20% 95%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(30 25% 96%) 0%, hsl(30 20% 97%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(345 40% 88%) 0%, hsl(30 25% 90%) 100%);
-    
-    /* Shadows - Soft and warm */
-    --shadow-soft: 0 2px 8px hsl(30 20% 70% / 0.08);
-    --shadow-medium: 0 4px 16px hsl(30 20% 60% / 0.12);
-    --shadow-glow: 0 8px 32px hsl(345 40% 70% / 0.15);
-
-    /* Transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Shadows - "Ambient Light" */
+    --shadow-soft: 0 4px 20px -2px rgba(0,0,0,0.05);
+    --shadow-medium: 0 12px 32px -4px rgba(0,0,0,0.08);
   }
 
   .dark {
-    --background: 30 10% 12%;
-    --foreground: 30 20% 95%;
-
-    --card: 30 12% 15%;
-    --card-foreground: 30 20% 95%;
-
-    --popover: 30 12% 15%;
-    --popover-foreground: 30 20% 95%;
-
-    --primary: 30 15% 75%;
-    --primary-foreground: 30 10% 12%;
-
-    --secondary: 30 10% 20%;
-    --secondary-foreground: 30 20% 95%;
-
-    --muted: 30 10% 18%;
-    --muted-foreground: 30 8% 60%;
-
-    --accent: 345 30% 40%;
-    --accent-foreground: 30 20% 95%;
-
-    --sage: 140 15% 35%;
-    --sage-foreground: 140 20% 90%;
-
-    --destructive: 10 45% 45%;
-    --destructive-foreground: 30 20% 95%;
-
-    --border: 30 10% 22%;
-    --input: 30 10% 22%;
-    --ring: 30 15% 75%;
+    --background: 30 5% 10%;
+    --foreground: 30 5% 99%;
+    --card: 30 6% 14%;
+    --card-foreground: 30 5% 99%;
+    --popover: 30 6% 14%;
+    --popover-foreground: 30 5% 99%;
+    --primary: 32 18% 58%;
+    --primary-foreground: 30 5% 10%;
+    --secondary: 100 8% 51%;
+    --secondary-foreground: 30 5% 99%;
+    --muted: 30 6% 18%;
+    --muted-foreground: 30 5% 65%;
+    --accent: 35 45% 52%;
+    --accent-foreground: 30 5% 99%;
+    --border: 30 5% 20%;
+    --input: 30 5% 20%;
+    --ring: 32 18% 58%;
   }
 }
 
@@ -105,8 +72,19 @@ All colors MUST be HSL.
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
+  .dark .glass {
+    @apply bg-black/70 backdrop-blur-md border border-white/5;
   }
 }

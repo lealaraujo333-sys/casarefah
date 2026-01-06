@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,62 +5,67 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import CartSheet from "@/components/CartSheet";
-import CandleLoader from "@/components/CandleLoader";
-import Index from "./pages/Index";
+import ScrollToTop from "@/components/ScrollToTop";
+import IndexRefined from "./pages/IndexRefined";
+import IndexLegacy from "./pages/Index";
 import Product from "./pages/Product";
 import Category from "./pages/Category";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminProducts from "./pages/admin/Products";
+import AdminSettings from "./pages/admin/Settings";
+import AdminLogin from "./pages/admin/Login";
+import RequireAuth from "./components/admin/RequireAuth";
+import { ProductProvider } from "./contexts/ProductContext";
+import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [showLoader, setShowLoader] = useState(true);
-
-  useEffect(() => {
-    // Simulate initial load time
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleLoaderComplete = () => {
-    // Wait for candle blow-out animation to complete
-    setTimeout(() => {
-      setShowLoader(false);
-    }, 1000);
-  };
-
-  if (showLoader) {
-    return <CandleLoader isLoading={isLoading} onComplete={handleLoaderComplete} />;
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <CartProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <CartSheet />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/produto/:slug" element={<Product />} />
-              <Route path="/categoria/:category" element={<Category />} />
-              <Route path="/carrinho" element={<Cart />} />
-              <Route path="/checkout" element={<Checkout />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </CartProvider>
+        <AuthProvider>
+          <ProductProvider>
+            <CartProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <ScrollToTop />
+                <CartSheet />
+                <Routes>
+                  <Route path="/" element={<IndexRefined />} />
+                  <Route path="/legacy" element={<IndexLegacy />} />
+                  <Route path="/produto/:slug" element={<Product />} />
+                  <Route path="/categoria/:category" element={<Category />} />
+                  <Route path="/carrinho" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
+
+                  {/* Admin Routes */}
+                  <Route path="/admin/login" element={<AdminLogin />} />
+
+                  <Route path="/admin" element={<RequireAuth />}>
+                    <Route element={<AdminLayout />}>
+                      <Route index element={<AdminDashboard />} />
+                      <Route path="products" element={<AdminProducts />} />
+                      <Route path="settings" element={<AdminSettings />} />
+                    </Route>
+                  </Route>
+
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </CartProvider>
+          </ProductProvider>
+        </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
 };
 
 export default App;
+

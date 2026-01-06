@@ -1,4 +1,4 @@
-import heroImage from "@/assets/hero-zen-arrangement.png";
+const heroImage = "/products/hero-zen-arrangement.png";
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
 import { Clock3, Leaf, Sparkles } from "lucide-react";
@@ -140,7 +140,7 @@ const Hero = () => {
                       MOQ 20 unidades
                     </span>
                     <span className="rounded-full bg-secondary/20 px-3 py-1">
-                      Personalizado 
+                      Personalizado
                     </span>
                     <span className="rounded-full bg-emerald-100/60 px-3 py-1 text-emerald-700">
                       Entrega nacional

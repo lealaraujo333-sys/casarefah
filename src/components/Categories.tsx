@@ -1,6 +1,6 @@
 import CategoryCard from "./CategoryCard";
-import collectionEssenzaImage from "@/assets/collection-essenza.png";
-import collectionHomeDecorImage from "@/assets/collection-home-decor.png";
+const collectionEssenzaImage = "/products/collection-essenza.png";
+const collectionHomeDecorImage = "/products/collection-home-decor.png";
 
 const Categories = () => {
   const categories = [

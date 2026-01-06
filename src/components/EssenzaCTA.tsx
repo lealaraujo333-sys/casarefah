@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import essenzaImage from "@/assets/collection-essenza.png";
+const essenzaImage = "/products/collection-essenza.png";
 import { ArrowUpRight } from "lucide-react";
 
 const EssenzaCTA = () => {

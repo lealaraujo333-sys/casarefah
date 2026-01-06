@@ -7,7 +7,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { products, getFeaturedProducts } from "@/data/products";
+import { useProducts } from "@/contexts/ProductContext";
 import { Product } from "@/types/product";
 import { ArrowUpRight, ChevronRight } from "lucide-react";
 
@@ -22,12 +22,13 @@ const buildWhatsAppLink = (product: Product) => {
 
 const ProductShowcaseTabs = () => {
   const navigate = useNavigate();
+  const { products } = useProducts();
   const [activeTab, setActiveTab] = useState<"destaques" | "catalogo">(
     "destaques"
   );
 
-  const featuredProducts = useMemo(() => getFeaturedProducts(), []);
-  const catalogProducts = useMemo(() => products, []);
+  const featuredProducts = useMemo(() => products.filter(p => p.featured), [products]);
+  const catalogProducts = useMemo(() => products, [products]);
 
   const handleOpenCatalog = () => setActiveTab("catalogo");
 

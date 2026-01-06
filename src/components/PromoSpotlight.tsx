@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TimerReset } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { products } from "@/data/products";
+import { useProducts } from "@/contexts/ProductContext";
 
 type TimeLeft = {
   hours: string;
@@ -26,6 +26,7 @@ const calculateTimeLeft = (target: Date): TimeLeft => {
 
 const PromoSpotlight = () => {
   const navigate = useNavigate();
+  const { products } = useProducts();
   const flashSaleUntil = useMemo(
     () => new Date(Date.now() + 1000 * 60 * 60 * 36),
     []
@@ -41,7 +42,7 @@ const PromoSpotlight = () => {
             product.originalPrice && product.originalPrice > product.price
         )
         .slice(0, 4),
-    []
+    [products]
   );
 
   useEffect(() => {
@@ -113,10 +114,10 @@ const PromoSpotlight = () => {
             const discount =
               product.originalPrice && product.originalPrice > product.price
                 ? Math.round(
-                    ((product.originalPrice - product.price) /
-                      product.originalPrice) *
-                      100
-                  )
+                  ((product.originalPrice - product.price) /
+                    product.originalPrice) *
+                  100
+                )
                 : 0;
 
             return (

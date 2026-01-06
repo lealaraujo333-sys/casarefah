@@ -10,6 +10,11 @@ export interface Product {
   inStock: boolean;
   featured?: boolean;
   images?: string[];
+  dimensions?: string;
+  packaging?: string;
+  kitContents?: string[];
+  details?: string;
+  care?: string;
 }
 
 export interface CartItem extends Product {

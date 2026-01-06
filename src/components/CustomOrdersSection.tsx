@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import customImage from "@/assets/Florescer da Cerejeira.png";
-import { Stamp } from "lucide-react";
+const customImage = "/products/florescer-da-cerejeira.png"; import { Stamp } from "lucide-react";
 
 const CustomOrdersSection = () => {
   const whatsappNumber = "5511984336900";

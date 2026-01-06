@@ -18,16 +18,19 @@ const NotFound = () => {
         <p className="text-base text-muted-foreground max-w-md mx-auto">
           A página que você está procurando não existe ou foi movida.
         </p>
-        <Button 
-          asChild
-          size="lg"
-          className="mt-6"
-        >
-          <a href="/" className="flex items-center gap-2">
-            <Home className="h-4 w-4" />
-            Voltar ao Início
-          </a>
-        </Button>
+        <div className="flex flex-col items-center gap-6">
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="rounded-full border-foreground/20 hover:bg-foreground hover:text-background transition-all duration-300"
+          >
+            <a href="/" className="flex items-center gap-2 font-serif tracking-wider">
+              <Home className="h-4 w-4" />
+              VOLTAR AO INÍCIO
+            </a>
+          </Button>
+        </div>
       </div>
     </div>
   );
