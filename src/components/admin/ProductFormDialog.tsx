@@ -14,6 +14,12 @@ import { Upload, Image as ImageIcon, Check, Loader2 } from "lucide-react";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
+// Helper to get full image URL
+const getImageUrl = (path: string) => {
+    if (path.startsWith('http')) return path;
+    return `${API_URL}${path}`;
+};
+
 interface ProductFormDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -320,7 +326,7 @@ const ProductFormDialog = ({ open, onOpenChange, product }: ProductFormDialogPro
                         {formData.image && (
                             <div className="flex items-center gap-4 p-3 bg-stone-50 rounded-lg">
                                 <img
-                                    src={formData.image}
+                                    src={getImageUrl(formData.image)}
                                     alt="Preview"
                                     className="w-16 h-16 rounded-lg object-cover border"
                                 />
@@ -389,7 +395,7 @@ const ProductFormDialog = ({ open, onOpenChange, product }: ProductFormDialogPro
                                                     }`}
                                             >
                                                 <img
-                                                    src={img.path}
+                                                    src={img.url}
                                                     alt={img.name}
                                                     className="w-full h-full object-cover"
                                                 />

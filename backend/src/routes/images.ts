@@ -7,6 +7,14 @@ export const imagesRoute = new Hono();
 
 const PRODUCTS_DIR = join(process.cwd(), "public", "products");
 
+// Get base URL for images
+const getBaseUrl = () => {
+    if (process.env.RENDER_EXTERNAL_URL) {
+        return process.env.RENDER_EXTERNAL_URL;
+    }
+    return `http://localhost:${process.env.PORT || 3000}`;
+};
+
 // Ensure products directory exists
 if (!existsSync(PRODUCTS_DIR)) {
     mkdirSync(PRODUCTS_DIR, { recursive: true });
@@ -15,13 +23,14 @@ if (!existsSync(PRODUCTS_DIR)) {
 // GET /images - List all product images (Protected)
 imagesRoute.get("/", authMiddleware, async (c) => {
     try {
+        const baseUrl = getBaseUrl();
         const files = readdirSync(PRODUCTS_DIR);
         const images = files
             .filter(f => /\.(png|jpg|jpeg|webp|gif)$/i.test(f))
             .map(f => ({
                 name: f,
                 path: `/products/${f}`,
-                url: `/products/${f}`
+                url: `${baseUrl}/products/${f}`
             }));
         return c.json(images);
     } catch (e) {
@@ -70,10 +79,12 @@ imagesRoute.post("/upload", authMiddleware, async (c) => {
         writeFileSync(filePath, buffer);
 
         const imagePath = `/products/${safeName}`;
+        const baseUrl = getBaseUrl();
 
         return c.json({
             success: true,
             path: imagePath,
+            url: `${baseUrl}/products/${safeName}`,
             name: safeName
         }, 201);
 
