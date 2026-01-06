@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Lock, Truck, CreditCard } from "lucide-react";
 import { motion } from "framer-motion";
+import { getImageUrl } from "@/lib/imageUrl";
 
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
@@ -273,7 +274,7 @@ const Checkout = () => {
                   {items.map((item) => (
                     <div key={item.id} className="flex gap-4 items-start">
                       <div className="w-16 h-16 rounded-lg bg-stone-800 overflow-hidden flex-shrink-0">
-                        <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-80" />
+                        <img src={getImageUrl(item.image)} alt={item.name} className="w-full h-full object-cover opacity-80" />
                       </div>
                       <div className="flex-1">
                         <p className="font-medium text-stone-200">{item.name}</p>

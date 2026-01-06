@@ -8,6 +8,7 @@ import AboutSection from "@/components/refined/AboutSection";
 import { Reveal } from "@/components/ui/Reveal";
 import { Link } from "react-router-dom";
 import { useProducts } from "@/contexts/ProductContext";
+import { getImageUrl } from "@/lib/imageUrl";
 
 // This is the new high-fidelity home page
 const IndexRefined = () => {
@@ -37,7 +38,7 @@ const IndexRefined = () => {
                             <Link to={`/produto/${product.slug}`} key={product.id} className="group cursor-pointer">
                                 <div className="aspect-[3/4] bg-stone-100 rounded-xl overflow-hidden mb-6 relative">
                                     <img
-                                        src={product.image}
+                                        src={getImageUrl(product.image)}
                                         className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
                                         alt={product.name}
                                     />

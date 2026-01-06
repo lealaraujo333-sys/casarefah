@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useProducts } from "@/contexts/ProductContext";
 import { Product } from "@/types/product";
 import { ArrowUpRight, ChevronRight } from "lucide-react";
+import { getImageUrl } from "@/lib/imageUrl";
 
 const whatsappNumber = "5511984336900";
 
@@ -84,7 +85,7 @@ const ProductShowcaseTabs = () => {
                 >
                   <div className="relative aspect-[4/3] overflow-hidden rounded-t-3xl">
                     <img
-                      src={product.image}
+                      src={getImageUrl(product.image)}
                       alt={product.name}
                       className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                     />

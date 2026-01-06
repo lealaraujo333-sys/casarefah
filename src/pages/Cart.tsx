@@ -5,6 +5,7 @@ import FooterRefined from "@/components/FooterRefined";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, X, ShoppingBag, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getImageUrl } from "@/lib/imageUrl";
 
 const Cart = () => {
   const { items, removeFromCart, updateQuantity, totalPrice } = useCart();
@@ -68,7 +69,7 @@ const Cart = () => {
                   >
                     <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-stone-100 flex-shrink-0 border border-stone-100">
                       <img
-                        src={item.image}
+                        src={getImageUrl(item.image)}
                         alt={item.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />

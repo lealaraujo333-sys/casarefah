@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { Minus, Plus, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getImageUrl } from "@/lib/imageUrl";
 
 const CartSheet = () => {
   const { items, removeFromCart, updateQuantity, totalPrice, isOpen, setIsOpen } = useCart();
@@ -24,7 +25,7 @@ const CartSheet = () => {
         <SheetHeader>
           <SheetTitle className="font-cormorant text-2xl">Seu Carrinho</SheetTitle>
         </SheetHeader>
-        
+
         <div className="flex flex-col h-full">
           {items.length === 0 ? (
             <div className="flex-1 flex items-center justify-center">
@@ -37,7 +38,7 @@ const CartSheet = () => {
                   <div key={item.id} className="flex gap-4 pb-4 border-b border-border/50">
                     <div className="w-20 h-20 rounded overflow-hidden bg-muted flex-shrink-0">
                       <img
-                        src={item.image}
+                        src={getImageUrl(item.image)}
                         alt={item.name}
                         className="w-full h-full object-cover"
                       />
@@ -80,7 +81,7 @@ const CartSheet = () => {
                   </div>
                 ))}
               </div>
-              
+
               <div className="border-t border-border/50 pt-4 space-y-4">
                 <div className="flex justify-between text-lg font-semibold">
                   <span>Total:</span>

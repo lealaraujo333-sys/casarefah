@@ -5,6 +5,7 @@ import { Product } from "@/types/product";
 import { useCart } from "@/contexts/CartContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { getImageUrl } from "@/lib/imageUrl";
 
 interface ProductCardProps {
   product: Product;
@@ -37,7 +38,7 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
     >
       <div className="aspect-square overflow-hidden bg-muted relative">
         <img
-          src={product.image}
+          src={getImageUrl(product.image)}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />

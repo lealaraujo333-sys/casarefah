@@ -15,6 +15,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { Reveal } from "@/components/ui/Reveal";
+import { getImageUrl } from "@/lib/imageUrl";
 
 const Product = () => {
   const { slug } = useParams();
@@ -73,7 +74,7 @@ const Product = () => {
               className="sticky top-32 rounded-3xl overflow-hidden bg-stone-100 shadow-sm"
             >
               <img
-                src={product.image}
+                src={getImageUrl(product.image)}
                 alt={product.name}
                 className="w-full h-auto object-cover aspect-[4/5]"
               />

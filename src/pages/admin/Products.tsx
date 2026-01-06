@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import ProductFormDialog from "@/components/admin/ProductFormDialog";
 import { Product } from "@/types/product";
+import { getImageUrl } from "@/lib/imageUrl";
 
 const AdminProducts = () => {
     const { products, deleteProduct } = useProducts();
@@ -87,7 +88,7 @@ const AdminProducts = () => {
                         <div key={product.id} className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-stone-50/50 transition-colors">
                             <div className="col-span-5 flex items-center gap-4">
                                 <div className="w-12 h-12 rounded-lg bg-stone-100 overflow-hidden flex-shrink-0">
-                                    <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                                    <img src={getImageUrl(product.image)} alt={product.name} className="w-full h-full object-cover" />
                                 </div>
                                 <div>
                                     <h3 className="font-medium text-stone-900">{product.name}</h3>

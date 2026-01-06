@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { TimerReset } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProducts } from "@/contexts/ProductContext";
+import { getImageUrl } from "@/lib/imageUrl";
 
 type TimeLeft = {
   hours: string;
@@ -128,7 +129,7 @@ const PromoSpotlight = () => {
               >
                 <div className="relative aspect-square overflow-hidden">
                   <img
-                    src={product.image}
+                    src={getImageUrl(product.image)}
                     alt={product.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
