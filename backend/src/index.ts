@@ -16,8 +16,11 @@ const app = new Hono();
 app.use("*", logger());
 app.use("*", cors()); // Open CORS for dev, restrict in prod
 
+// Health Check endpoint (for Render and keep-alive)
+app.get("/health", (c) => c.json({ status: "ok", timestamp: new Date().toISOString() }));
+
 // API Routes (must come before static files)
-app.get("/api", (c) => c.json({ message: "Casa Refah API is running 🚀" }));
+app.get("/api", (c) => c.json({ message: "Casa Refah API is running 🚀", status: "online" }));
 app.route("/products", productsRoute);
 app.route("/admin", adminRoute);
 app.route("/kits", kitsRoute);
@@ -41,13 +44,12 @@ app.get("*", async (c) => {
     return c.html(`
         <!DOCTYPE html>
         <html>
-        <head><title>Casa Refah</title></head>
+        <head><title>Casa Refah API</title></head>
         <body style="font-family: sans-serif; padding: 2rem; text-align: center;">
             <h1>🚀 Casa Refah API</h1>
-            <p>O frontend ainda não foi construído.</p>
-            <p>Execute: <code>npm run build</code> na pasta principal</p>
+            <p>API online! Frontend hospedado na Vercel.</p>
             <hr />
-            <p><a href="/api">Ver API Status</a></p>
+            <p><a href="/api">Ver API Status</a> | <a href="/health">Health Check</a></p>
         </body>
         </html>
     `);
@@ -60,10 +62,28 @@ app.onError((err, c) => {
 });
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-console.log(`Server is running on port ${port}`);
+console.log(`🚀 Casa Refah API running on port ${port}`);
 
 serve({
     fetch: app.fetch,
     port,
 });
+
+// Keep-alive: Self-ping every 14 minutes to prevent Render from sleeping (free tier sleeps after 15min)
+const RENDER_URL = process.env.RENDER_EXTERNAL_URL;
+if (RENDER_URL) {
+    const PING_INTERVAL = 14 * 60 * 1000; // 14 minutes
+    setInterval(async () => {
+        try {
+            const response = await fetch(`${RENDER_URL}/health`);
+            if (response.ok) {
+                console.log(`[Keep-Alive] Ping successful at ${new Date().toISOString()}`);
+            }
+        } catch (error) {
+            console.error(`[Keep-Alive] Ping failed:`, error);
+        }
+    }, PING_INTERVAL);
+    console.log(`[Keep-Alive] Self-ping enabled every 14 minutes`);
+}
+
 

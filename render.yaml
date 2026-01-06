@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: casarefah-api
+    runtime: node
+    region: oregon
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 24h
+      - key: PORT
+        value: 3000
+      - key: NODE_ENV
+        value: production
